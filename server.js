@@ -28,3 +28,29 @@ mongoose.connect(process.env.MONGO_URI, {
 })
 .then(() => app.listen(PORT, () => console.log(`DB connected & Server running on port ${PORT}`)))
 .catch(err => console.error("MongoDB connection error:", err));
+
+// write users story
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(express.json());
+app.use(express.static('public')); // Serves static files
+
+mongoose.connect('mongodb://localhost:27017/storyDB', { useNewUrlParser: true, useUnifiedTopology: true });
+
+const StorySchema = new mongoose.Schema({ story: String });
+const Story = mongoose.model('Story', StorySchema);
+
+app.post('/save-story', async (req, res) => {
+    try {
+        const newStory = new Story({ story: req.body.story });
+        await newStory.save();
+        res.json({ message: 'Story saved successfully!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error saving story' });
+    }
+});
+
+app.listen(3000, () => console.log('Server running on http://localhost:3000'));
