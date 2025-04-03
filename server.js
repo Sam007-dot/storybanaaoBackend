@@ -31,13 +31,5 @@ mongoose.connect(process.env.MONGO_URI, {
 .then(() => app.listen(PORT, () => console.log(`DB connected & Server running on port ${PORT}`)))
 .catch(err => console.error("MongoDB connection error:", err));
 
-particlesJS("particles-js", {
-    particles: {
-        number: { value: 100 },
-        shape: { type: "circle" },
-        opacity: { value: 0.5 },
-        size: { value: 2 },
-        move: { speed: 1 }
-    }
-});
+
 
