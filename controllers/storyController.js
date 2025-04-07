@@ -31,3 +31,29 @@ exports.showStory = async (req, res) => {
     res.status(400).json({ eroor: err.message });
   }
 }
+
+const PDFDocument = require('pdfkit');
+
+// Generate PDF of a story
+exports.getStoryPDF = async (req, res) => {
+  try {
+    const story = await Story.findById(req.params.id);
+    if (!story) return res.status(404).json({ error: "Story not found" });
+
+    const doc = new PDFDocument();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${story.title}.pdf"`);
+
+    doc.pipe(res); // Send PDF directly to response
+
+    doc.fontSize(24).text(story.title, { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(14).text(story.content, { align: 'left' });
+
+    doc.end();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
