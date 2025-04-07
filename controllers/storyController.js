@@ -22,7 +22,7 @@ exports.writeStory = async (req, res) => {
 };
 
 
-exports.showStory() = async (req, res) => {
+exports.showStory = async (req, res) => {
   try {
     const stories = await Story.find(); // Fetch all Storys from the database
     res.status(200).json(stories); // Return the list of Storys
