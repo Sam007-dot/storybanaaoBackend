@@ -1,15 +1,15 @@
 
-const User = require('../models/Story');
+const Story = require('../models/Story');
 
-// Register User
+// Register Story
 exports.writeStory = async (req, res) => {
   try {
     const { title, content } = req.body;
-   
 
-  
 
-    const newStory = new User({
+
+
+    const newStory = new Story({
       title,
       content,
     });
@@ -20,3 +20,14 @@ exports.writeStory = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+
+exports.showStory() = async (req, res) => {
+  try {
+    const stories = await Story.find(); // Fetch all Storys from the database
+    res.status(200).json(stories); // Return the list of Storys
+  }
+  catch (err) {
+    res.status(400).json({ eroor: err.message });
+  }
+}
