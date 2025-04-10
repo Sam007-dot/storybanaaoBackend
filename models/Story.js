@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const storySchema = new mongoose.Schema({
-  storyName: { type: String, required: true },
+  storyName: { type: String, required: true  },
   storyContent: { type: String, required: true },
-  storyBanner: { type: String, required: true } // Image path
+  storyBanner: { type: String } // Image path
 });
 
 module.exports = mongoose.model("Story", storySchema);
