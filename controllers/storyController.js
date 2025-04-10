@@ -1,5 +1,4 @@
 const Story = require("../models/Story");
-const story = require("../models/Story");
 
 // 📥 Add a new story
 exports.addStory = async (req, res) => {
