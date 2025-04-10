@@ -9,8 +9,8 @@ exports.addStory = async (req, res) => {
       storyBanner: req.file?.path, // Store file path if uploaded
     });
 
-    await newStory.save();
-    res.status(201).json(newStory);
+    await newstory.save();
+    res.status(201).json(newstory);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
