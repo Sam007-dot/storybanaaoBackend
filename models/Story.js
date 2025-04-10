@@ -1,10 +1,9 @@
-const mongoose = require('mongoose');
-const { registerUser, loginUser, getUserProfile, updateUser, getAllUsers } = require('../controllers/userController');
+const mongoose = require("mongoose");
 
-
-const stroySchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    content: { type: String, unique: true, required: true },
+const storySchema = new mongoose.Schema({
+  storyName: { type: String, required: true },
+  storyContent: { type: Number, required: true },
+  storyBanner: { type: String, required: true } // Image path
 });
 
-module.exports = mongoose.model('Story', stroySchema);
+module.exports = mongoose.model("Story", storySchema);
