@@ -3,14 +3,14 @@ const Story = require("../models/Story");
 // 📥 Add a new story
 exports.addStory = async (req, res) => {
   try {
-    const newstory = new Story({
+    const newStory = new Story({
       storyName: req.body.storyName,
       storyContent: req.body.storyContent,
       storyBanner: req.file?.path, // Store file path if uploaded
     });
 
-    await newstory.save();
-    res.status(201).json(newstory);
+    await newStory.save();
+    res.status(201).json(newStory);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
