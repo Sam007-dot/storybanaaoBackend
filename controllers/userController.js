@@ -6,14 +6,14 @@ const jwt = require('jsonwebtoken');
 // Register User
 exports.registerUser = async (req, res) => {
   try {
-    const { name, email,password } = req.body;
+    const { username, email,password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Get the Cloudinary URL of the uploaded file
     const profilePicture = req.file?.path;
 
     const newUser = new User({
-      name,
+      username,
       email,
       password: hashedPassword,
       profilePicture, // Save the Cloudinary URL
@@ -44,7 +44,7 @@ exports.loginUser = async (req, res) => {
             token,
             user: {
                 id: user._id,
-                name: user.name,
+                username: user.username,
                 email: user.email,
                 profilePicture: user.profilePicture,
             },
@@ -66,7 +66,7 @@ exports.getUserProfile = async (req, res) => {
     }
 
     res.json({
-      name: user.name,
+      username: user.username,
       email: user.email,
       profilePicture: user.profilePicture,
     });
@@ -85,7 +85,7 @@ exports.updateUser = async (req, res) => {
 
     // Collect updated data from the request body
     const updatedData = {
-      name: req.body.name,
+      username: req.body.username,
       email: req.body.email,
     };
 
