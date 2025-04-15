@@ -74,6 +74,23 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+exports.getUserProfileByName = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.username).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json({
+      username: user.username,
+      email: user.email,
+      profilePicture: user.profilePicture,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 // Update User
 exports.updateUser = async (req, res) => {
