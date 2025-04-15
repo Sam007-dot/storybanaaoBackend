@@ -1,14 +1,20 @@
 const Story = require("../models/Story");
-const User = require("../models/User")
+const User = require("../models/User");
 
 // 📥 Add a new story
 exports.addStory = async (req, res) => {
   try {
+    const { storyName, storyContent, author } = req.body;
+
+    if (!storyName || !storyContent || !author) {
+      return res.status(400).json({ message: "Required fields missing." });
+    }
+
     const newStory = new Story({
-      storyName: req.body.storyName,
-      storyContent: req.body.storyContent,
-      storyBanner: req.file?.path || '', // Store file path if uploaded
-      author: req.user._id, // coming from JWT/session
+      storyName,
+      storyContent,
+      storyBanner: req.file?.path || '',
+      author
     });
 
     await newStory.save();
@@ -18,22 +24,22 @@ exports.addStory = async (req, res) => {
   }
 };
 
-// 📄 Get all storys
+// 📄 Get all stories
 exports.getStories = async (req, res) => {
   try {
-    const stories = await Story.find().populate('author', 'username');
+    const stories = await Story.find().populate("author", "username");
     res.json(stories);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// 🔎 Get single story by ID
+// 🔎 Get all stories of a user by user ID
 exports.getStoryById = async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username });
+    const user = await User.findById(req.params.id); // Changed from username to ID
     if (!user) return res.status(404).json({ message: "User not found" });
-  
+
     const stories = await Story.find({ author: user._id });
     res.json(stories);
   } catch (err) {
@@ -42,37 +48,24 @@ exports.getStoryById = async (req, res) => {
 };
 
 // 🛠️ Update a story
-// 🛠️ Update a story
 exports.updateStory = async (req, res) => {
   try {
     const storyId = req.params.id;
+    const { storyName, storyContent } = req.body;
 
-    // Ensure that storyContent is included
-    if (!req.body.storyName || !req.body.storyContent) {
-      return res.status(400).json({ message: "Story name and content are required." });
+    if (!storyName || !storyContent) {
+      return res.status(400).json({ message: "Story name and content required." });
     }
 
     const updatedData = {
-      storyName: req.body.storyName,
-      storyContent: req.body.storyContent, // Correct field name
+      storyName,
+      storyContent,
+      ...(req.file && { storyBanner: req.file.path }),
     };
-
-    if (req.file) {
-      updatedData.storyBanner = req.file.path; // Update banner if uploaded
-    }
-
-    // Remove undefined fields
-    Object.keys(updatedData).forEach((key) => {
-      if (updatedData[key] === undefined) {
-        delete updatedData[key];
-      }
-    });
 
     const updatedStory = await Story.findByIdAndUpdate(storyId, updatedData, { new: true });
 
-    if (!updatedStory) {
-      return res.status(404).json({ message: "No such Story found" });
-    }
+    if (!updatedStory) return res.status(404).json({ message: "Story not found." });
 
     res.json({ message: "Story updated successfully!", story: updatedStory });
   } catch (err) {
@@ -80,17 +73,11 @@ exports.updateStory = async (req, res) => {
   }
 };
 
-
 // ❌ Delete a story
 exports.deleteStory = async (req, res) => {
   try {
-    const storyId = req.params.id;
-
-    const deletedStory = await Story.findByIdAndDelete(storyId);
-
-    if (!deletedStory) {
-      return res.status(404).json({ message: "Story not found" });
-    }
+    const deletedStory = await Story.findByIdAndDelete(req.params.id);
+    if (!deletedStory) return res.status(404).json({ message: "Story not found" });
 
     res.json({ message: "Story deleted successfully!" });
   } catch (err) {
