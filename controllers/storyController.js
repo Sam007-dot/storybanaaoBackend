@@ -42,13 +42,19 @@ exports.getStoryById = async (req, res) => {
 };
 
 // 🛠️ Update a story
+// 🛠️ Update a story
 exports.updateStory = async (req, res) => {
   try {
     const storyId = req.params.id;
 
+    // Ensure that storyContent is included
+    if (!req.body.storyName || !req.body.storyContent) {
+      return res.status(400).json({ message: "Story name and content are required." });
+    }
+
     const updatedData = {
       storyName: req.body.storyName,
-      storyValue: req.body.storyValue,
+      storyContent: req.body.storyContent, // Correct field name
     };
 
     if (req.file) {
@@ -73,6 +79,7 @@ exports.updateStory = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // ❌ Delete a story
 exports.deleteStory = async (req, res) => {
