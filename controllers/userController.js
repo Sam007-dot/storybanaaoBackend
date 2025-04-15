@@ -74,9 +74,13 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+
+// Get User Profile by Username
 exports.getUserProfileByName = async (req, res) => {
   try {
-    const user = await User.findById(req.params.username).select('-password');
+    const user = await User.findOne({ username: req.params.username }).select('-password');
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -86,6 +90,8 @@ exports.getUserProfileByName = async (req, res) => {
       username: user.username,
       email: user.email,
       profilePicture: user.profilePicture,
+      bio: user.bio,
+      createdAt: user.createdAt,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
