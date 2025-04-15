@@ -27,7 +27,7 @@ exports.addStory = async (req, res) => {
 // 📄 Get all stories
 exports.getStories = async (req, res) => {
   try {
-    const stories = await Story.find().populate("author", "_id");
+    const stories = await Story.find().populate("author", "username");
     res.json(stories);
   } catch (error) {
     res.status(500).json({ message: error.message });
