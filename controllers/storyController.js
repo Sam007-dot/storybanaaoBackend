@@ -4,7 +4,7 @@ const User = require("../models/User");
 // 📥 Add a new story
 exports.addStory = async (req, res) => {
   try {
-    const { storyName, storyContent } = req.body;
+    const { storyName, storyContent, author } = req.body;
 
     if (!storyName || !storyContent || !author) {
       return res.status(400).json({ message: "Required fields missing." });
@@ -14,7 +14,7 @@ exports.addStory = async (req, res) => {
       storyName,
       storyContent,
       storyBanner: req.file?.path || '',
-      author: req.user._id
+      author, // Directly use author from body
     });
 
     await newStory.save();
@@ -23,6 +23,7 @@ exports.addStory = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 // 📄 Get all stories
 exports.getStories = async (req, res) => {
